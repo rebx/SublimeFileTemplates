@@ -12,7 +12,7 @@ http://www.youtube.com/embed/M4isYen7_Z4
 
 ### Package Control
 
-The easiest way to install this is with Package Control.
+To get 'mneuhaus' version, the easiest way is with Package Control.
 
 If you just went and installed Package Control, you probably need to restart Sublime Text 2 before doing this next bit.
 
@@ -24,7 +24,7 @@ Package Control will automatically keep FileTemplates up to date with the latest
 
 ### Clone from GitHub
 
-    git clone http://github.com/mneuhaus/SublimeFileTemplates
+    git clone http://github.com/NotSqrt/SublimeFileTemplates -o FileTemplates
 
 ## Usage
 
