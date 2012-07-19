@@ -1,9 +1,9 @@
 <template>
-	<!-- Or you set a path to a separate Template File here -->
-	<file>PHP.php</file>
+	<!-- Or you set a path to a seperate Template File here -->
+	<file>Python.py</file>
 
 	<!-- The filename for the new File, you can use the arguments to make it dynamic -->
-	<filename>$name.php</filename>
+	<filename>$name.py</filename>
 
 	<!-- Default Path to create the new file inside your current Project -->
 	<!-- you can use the arguments to make it dynamic -->

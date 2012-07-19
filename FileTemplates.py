@@ -1,11 +1,16 @@
-import os, time, re
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+
+import os
+import re
 import sublime
 import sublime_plugin
-import glob
-import os
 from xml.etree import ElementTree
 
 current_path = None
+template = {}
+
 
 class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
     ROOT_DIR_PREFIX = '[root: '
@@ -23,9 +28,9 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
     def create_and_open_file(self, path):
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
-        
+
         open(path, 'w')
-        
+
         global template
         template = {
             'content': self.replace_variables(self.get_content(path)),
@@ -34,7 +39,7 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
         }
 
         global current_path
-        
+
         view = self.window.open_file(path)
         current_path = view.file_name()
 
@@ -57,7 +62,6 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             pass
 
         return content
-
 
     def find_root(self):
         folders = self.window.folders()
@@ -88,7 +92,7 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             settings = sublime.load_settings('FileTemplates.sublime-settings')
             results = settings.get(key)
         return results
-    
+
     def find_templates(self):
         self.templates = []
         self.template_paths = []
@@ -105,7 +109,7 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             #print self.template_path
             tree = ElementTree.parse(open(self.template_path))
             self.template = tree
-            
+
             self.construct_excluded_pattern()
             self.build_relative_paths()
             #self.move_current_directory_to_top()
@@ -120,9 +124,9 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             path = ""
 
         if len(path) > 0:
-            self.relative_paths = [ "Default: " + self.template.find("path").text ]
+            self.relative_paths = ["Default: " + self.template.find("path").text]
 
-        self.relative_paths.append( self.ROOT_DIR_PREFIX + os.path.split(self.root)[-1] + self.ROOT_DIR_SUFFIX )
+        self.relative_paths.append(self.ROOT_DIR_PREFIX + os.path.split(self.root)[-1] + self.ROOT_DIR_SUFFIX)
 
         for base, dirs, files in os.walk(self.root):
             dirs_copy = dirs[:]
@@ -146,7 +150,7 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
     def dir_selected(self, selected_index):
         if selected_index != -1:
             self.selected_dir = self.relative_paths[selected_index]
-            
+
             filename = ''
             if len(self.template.find("filename").text) > 0:
                 filename = self.template.find("filename").text
@@ -155,12 +159,12 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
                 self.arguments = list(self.template.find("arguments"))
             except:
                 self.arguments = []
-            
+
             self.variables = {}
             self.next_argument()
 
     def next_argument(self):
-        if len(self.arguments) > 0 :
+        if len(self.arguments) > 0:
             self.argument = self.arguments.pop(0)
             caption = self.argument.text
             self.window.show_input_panel(caption, '', self.process_argument, None, None)
@@ -173,7 +177,7 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
 
     def replace_variables(self, text):
         for variable in self.variables.keys():
-            text = text.replace( "$" + variable, self.variables[variable] )
+            text = text.replace("$" + variable, self.variables[variable])
         return text
 
     def file_name_input(self):
@@ -185,7 +189,7 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             dir = ''
         if self.selected_dir.startswith("Default: "):
             dir = self.template.find("path").text
-        
+
         dir = self.replace_variables(dir)
 
         full_path = os.path.join(self.root, dir, file_name)
@@ -194,13 +198,15 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             return
         else:
             self.create_and_open_file(full_path)
-            
+
+
 class FileTemplatesListener(sublime_plugin.EventListener):
     def on_load(self, view):
         global current_path
         if view.file_name() == current_path:
             populate_file(view)
             current_path = None
+
 
 def populate_file(view):
     global template

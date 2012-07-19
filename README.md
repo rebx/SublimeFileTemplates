@@ -36,14 +36,14 @@ explained below.
 
 The Templates are files with the extension ".file-template"
 
-Here's a basic example 
+Here's a basic example
 
 ```xml
 <template>
-  <!-- You can us this to specifiy the content for the Template -->
+  <!-- You can us this to specify the content for the Template -->
   <!-- <content><![CDATA[ ${0:Hello World} ]]></content> -->
 
-  <!-- Or you set a path to a seperate Template File here -->
+  <!-- Or you set a path to a separate Template File here -->
   <file>jQueryPlugin.js</file>
 
   <!-- The filename for the new File, you can use the arguments to make it dynamic -->
@@ -73,13 +73,18 @@ you can restrict the key bindings to command mode like this:
     { "keys": [" ", "n"], "command": "create_file_from_template", "context": [{"key": "setting.command_mode"}] }
 
 
+## Troubleshooting
+On Ubuntu 12.04, as Python2.6 is no longer installed, import errors might happen, a fix is available at:
+https://github.com/Kindari/SublimeXdebug#troubleshooting
+
+
 ## Thanks
 
 This Package was forked from [SublimeQuickFileCreator](https://github.com/noklesta/SublimeQuickFileCreator) because it provided the best base for my needs and a good starting point to learn from :)
 
-## Licence
+## License
 
-All of SublimeFileTemplates is licensed under the MIT licence.
+All of SublimeFileTemplates is licensed under the MIT license.
 
   Copyright (c) 2012 Anders Nøklestad
 
