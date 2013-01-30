@@ -21,6 +21,8 @@ end
 
 \$:.unshift File.join(File.dirname(__FILE__), 'lib')
 
+require 'optparse'
+
 # An example function that returns anything passed to it
 # 
 # == Parameters:
