@@ -55,7 +55,8 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             pass
 
         try:
-            path = os.path.abspath(os.path.join(os.path.dirname(self.template_path), self.template.find("file").text))
+            path = os.path.abspath(os.path.join(os.path.dirname(
+                self.template_path), self.template.find("file").text))
             content = open(path).read()
             print content
         except:
@@ -67,7 +68,8 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
         folders = self.window.folders()
         if len(folders) == 0:
             if self.window.active_view():
-                self.root = os.path.dirname(self.window.active_view().file_name())
+                self.root = os.path.dirname(
+                    self.window.active_view().file_name())
             else:
                 sublime.error_message('Could not find project root')
                 return False
@@ -79,7 +81,8 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
         return True
 
     def construct_excluded_pattern(self):
-        patterns = [pat.replace('|', '\\') for pat in self.get_setting('excluded_dir_patterns')]
+        patterns = [pat.replace(
+            '|', '\\') for pat in self.get_setting('excluded_dir_patterns')]
         self.excluded = re.compile('^(?:' + '|'.join(patterns) + ')$')
 
     def get_setting(self, key):
@@ -106,19 +109,21 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             for filename in filenames:
                 if filename.endswith(".file-template"):
                     self.template_paths.append(os.path.join(root, filename))
-                    self.templates.append(os.path.basename(root) + ": " + os.path.splitext(filename)[0])
+                    self.templates.append(os.path.basename(
+                        root) + ": " + os.path.splitext(filename)[0])
 
     def template_selected(self, selected_index):
         if selected_index != -1:
             self.template_path = self.template_paths[selected_index]
-            #print self.template_path
+            # print self.template_path
             tree = ElementTree.parse(open(self.template_path))
             self.template = tree
 
             self.construct_excluded_pattern()
             self.build_relative_paths()
-            #self.move_current_directory_to_top()
-            self.window.show_quick_panel(self.relative_paths, self.dir_selected)
+            # self.move_current_directory_to_top()
+            self.window.show_quick_panel(
+                self.relative_paths, self.dir_selected)
 
     def build_relative_paths(self):
         self.relative_paths = []
@@ -129,13 +134,16 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
             path = ""
 
         if len(path) > 0:
-            self.relative_paths = ["Default: " + self.template.find("path").text]
+            self.relative_paths = ["Default: " +
+                                   self.template.find("path").text]
 
-        self.relative_paths.append(self.ROOT_DIR_PREFIX + os.path.split(self.root)[-1] + self.ROOT_DIR_SUFFIX)
+        self.relative_paths.append(self.ROOT_DIR_PREFIX + os.path.split(
+            self.root)[-1] + self.ROOT_DIR_SUFFIX)
 
         for base, dirs, files in os.walk(self.root):
             dirs_copy = dirs[:]
-            [dirs.remove(dir) for dir in dirs_copy if self.excluded.search(dir)]
+            [dirs.remove(
+                dir) for dir in dirs_copy if self.excluded.search(dir)]
 
             for dir in dirs:
                 relative_path = os.path.join(base, dir)[self.rel_path_start:]
@@ -172,7 +180,8 @@ class CreateFileFromTemplateCommand(sublime_plugin.WindowCommand):
         if len(self.arguments) > 0:
             self.argument = self.arguments.pop(0)
             caption = self.argument.text
-            self.window.show_input_panel(caption, '', self.process_argument, None, None)
+            self.window.show_input_panel(
+                caption, '', self.process_argument, None, None)
         else:
             self.file_name_input()
 
